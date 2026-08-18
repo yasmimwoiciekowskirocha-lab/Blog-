@@ -4,145 +4,392 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog de Tecnologia</title>
+    <style>
+        /* --- Variáveis de Tema com Cores Vibrantes --- */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(255, 255, 255, 0.12);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-cyan: #38bdf8;
+            --accent-purple: #c084fc;
+            --badge-bg: rgba(56, 189, 248, 0.15);
+            --badge-text: #38bdf8;
+            --shadow-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --btn-bg: rgba(255, 255, 255, 0.08);
+            --btn-hover: rgba(255, 255, 255, 0.18);
+        }
+
+        body.tema-claro {
+            --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #f3e8ff 50%, #fce7f3 100%);
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(255, 255, 255, 0.6);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --accent-cyan: #0284c7;
+            --accent-purple: #9333ea;
+            --badge-bg: rgba(2, 132, 199, 0.12);
+            --badge-text: #0284c7;
+            --shadow-glow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+            --btn-bg: rgba(0, 0, 0, 0.05);
+            --btn-hover: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 3rem 1.5rem;
+            transition: all 0.4s ease;
+        }
+
+        header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 3rem auto;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Container Grid para Desktop */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 1.8rem;
+        }
+
+        /* Estilo dos Cards em Glassmorphism */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 1.8rem;
+            box-shadow: var(--shadow-glow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Card Destaque ocupa a largura total */
+        .card-destaque {
+            grid-column: 1 / -1;
+            border: 2px solid var(--accent-purple);
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.15) 0%, var(--card-bg) 100%);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-icon {
+            font-size: 1.4rem;
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .card-author {
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--badge-text);
+            background-color: var(--badge-bg);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .card-source {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+        }
+
+        .card-source a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .card-source a:hover {
+            text-decoration: underline;
+        }
+
+        /* Botões de Reação */
+        .card-reactions {
+            display: flex;
+            gap: 0.8rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .btn-reaction {
+            background: var(--btn-bg);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-reaction:hover {
+            background: var(--btn-hover);
+            transform: scale(1.05);
+        }
+
+        .btn-reaction.ativo {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        /* Botão Flutuante de Tema */
+        #toggle-theme {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            color: var(--text-main);
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        #toggle-theme:hover {
+            transform: scale(1.15) rotate(15deg);
+        }
+
+        /* Adaptação para celular */
+        @media (max-width: 600px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 2.1rem;
+            }
+        }
+    </style>
 </head>
 <body>
+
+    <header>
+        <h1>⚡ Blog de Tecnologia</h1>
+        <p>Curiosidades, histórias e fatos incríveis do mundo tech</p>
+    </header>
 
     <main class="container">
 
         <article class="card">
             <div>
                 <div class="card-header">
-                    <span class="card-icon"></span>
+                    <span class="card-icon">🚀</span>
                     <h2 class="card-title">Meu primeiro post</h2>
                 </div>
-                <p class="card-author">Por: Marcelo Paludetto</p>
+                <span class="card-author">Por: Marcelo Paludetto</span>
                 <p class="card-text">Boas-vindas ao meu novo blog! Aqui vou compartilhar dicas de programação e curiosidades da área de tecnologia.</p>
             </div>
             <div class="card-reactions">
-                <button class="btn-reaction" aria-label="Curtir">👍 0</button>
-                <button class="btn-reaction" aria-label="Amei">❤️ 0</button>
+                <button class="btn-reaction" aria-label="Curtir">👍 <span>0</span></button>
+                <button class="btn-reaction" aria-label="Amei">❤️ <span>0</span></button>
             </div>
         </article>
 
         <article class="card">
             <div>
                 <div class="card-header">
-                    <span class="card-icon"></span>
+                    <span class="card-icon">📊</span>
                     <h2 class="card-title">A quantidade de dados no mundo é surreal</h2>
                 </div>
-                <p class="card-author">Por: Marcelo Paludetto</p>
+                <span class="card-author">Por: Marcelo Paludetto</span>
                 <p class="card-text">Estima-se que 90% de todos os dados existentes no mundo hoje foram gerados apenas nos últimos dois anos. Vivemos em uma verdadeira explosão de informação que não para de acelerar.</p>
                 <p class="card-source">Fonte: <a href="https://www.jornalopcao.com.br" target="_blank" rel="noopener noreferrer">Jornal Opção</a></p>
             </div>
             <div class="card-reactions">
-                <button class="btn-reaction" aria-label="Curtir">👍 0</button>
-                <button class="btn-reaction" aria-label="Amei">❤️ 0</button>
+                <button class="btn-reaction" aria-label="Curtir">👍 <span>0</span></button>
+                <button class="btn-reaction" aria-label="Amei">❤️ <span>0</span></button>
             </div>
         </article>
 
         <article class="card">
             <div>
                 <div class="card-header">
-                    <span class="card-icon"></span>
+                    <span class="card-icon">🖱️</span>
                     <h2 class="card-title">O primeiro mouse não era de plástico</h2>
                 </div>
-                <p class="card-author">Por: Giulliana Cestari</p>
+                <span class="card-author">Por: Giulliana Cestari</span>
                 <p class="card-text">Antes do design ergonômico e das luzes RGB, o primeiro mouse do mundo foi construído em madeira! Criado por Douglas Engelbart em 1964, ele tinha o formato de uma caixa quadrada e apenas um botão.</p>
                 <p class="card-source">Fonte: <a href="https://www.tecmundo.com.br" target="_blank" rel="noopener noreferrer">TecMundo</a></p>
             </div>
             <div class="card-reactions">
-                <button class="btn-reaction" aria-label="Curtir">👍 0</button>
-                <button class="btn-reaction" aria-label="Amei">❤️ 0</button>
+                <button class="btn-reaction" aria-label="Curtir">👍 <span>0</span></button>
+                <button class="btn-reaction" aria-label="Amei">❤️ <span>0</span></button>
             </div>
         </article>
 
         <article class="card">
             <div>
                 <div class="card-header">
-                    <span class="card-icon"></span>
+                    <span class="card-icon">ᛒ</span>
                     <h2 class="card-title">Por que o Bluetooth se chama assim?</h2>
                 </div>
-                <p class="card-author">Por: Giulliana Cestari</p>
+                <span class="card-author">Por: Giulliana Cestari</span>
                 <p class="card-text">O nome é uma homenagem ao rei viking Harald Blatand-Gormsson, que unificou tribos da Escandinávia. Seu apelido era Harald "Bluetooth" porque seus dentes eram tão podres que tinham uma coloração azul escura.</p>
                 <p class="card-source">Fonte: <a href="https://www.techtudo.com.br" target="_blank" rel="noopener noreferrer">TechTudo</a></p>
             </div>
             <div class="card-reactions">
-                <button class="btn-reaction" aria-label="Curtir">👍 0</button>
-                <button class="btn-reaction" aria-label="Amei">❤️ 0</button>
+                <button class="btn-reaction" aria-label="Curtir">👍 <span>0</span></button>
+                <button class="btn-reaction" aria-label="Amei">❤️ <span>0</span></button>
             </div>
         </article>
 
         <article class="card">
             <div>
                 <div class="card-header">
-                    <span class="card-icon"></span>
+                    <span class="card-icon">🐛</span>
                     <h2 class="card-title">O "Bug" que era um bicho de verdade</h2>
                 </div>
-                <p class="card-author">Por: Giulliana Cestari</p>
+                <span class="card-author">Por: Giulliana Cestari</span>
                 <p class="card-text">O termo "bug" (inseto) para erros de software ficou famoso em 1947, quando engenheiros encontraram uma mariposa real presa dentro do computador Harvard Mark II, causando uma falha no sistema.</p>
                 <p class="card-source">Fonte: <a href="https://www.educamaisbrasil.com.br" target="_blank" rel="noopener noreferrer">Educa Mais Brasil</a></p>
             </div>
             <div class="card-reactions">
-                <button class="btn-reaction" aria-label="Curtir">👍 0</button>
-                <button class="btn-reaction" aria-label="Amei">❤️ 0</button>
+                <button class="btn-reaction" aria-label="Curtir">👍 <span>0</span></button>
+                <button class="btn-reaction" aria-label="Amei">❤️ <span>0</span></button>
             </div>
         </article>
 
         <article class="card">
             <div>
                 <div class="card-header">
-                    <span class="card-icon"></span>
+                    <span class="card-icon">☕</span>
                     <h2 class="card-title">A primeira webcam servia para vigiar café</h2>
                 </div>
-                <p class="card-author">Por: Giulliana Cestari</p>
+                <span class="card-author">Por: Giulliana Cestari</span>
                 <p class="card-text">Em 1991, pesquisadores da Universidade de Cambridge criaram a primeira webcam para não perderem tempo indo até a cozinha e encontrando a cafeteira vazia. Eles monitoravam o nível do café em tempo real nos seus monitores.</p>
                 <p class="card-source">Fonte: <a href="https://www.bbc.com" target="_blank" rel="noopener noreferrer">BBC</a></p>
             </div>
             <div class="card-reactions">
-                <button class="btn-reaction" aria-label="Curtir">👍 0</button>
-                <button class="btn-reaction" aria-label="Amei">❤️ 0</button>
+                <button class="btn-reaction" aria-label="Curtir">👍 <span>0</span></button>
+                <button class="btn-reaction" aria-label="Amei">❤️ <span>0</span></button>
             </div>
         </article>
 
         <article class="card card-destaque">
             <div>
                 <div class="card-header">
-                    <span class="card-icon"></span>
+                    <span class="card-icon">💻</span>
                     <h2 class="card-title">O primeiro computador não foi a máquina de Turing?</h2>
                 </div>
-                <p class="card-author">Por: Felipe Gibertoni</p>
+                <span class="card-author">Por: Felipe Gibertoni</span>
                 <p class="card-text">Apesar de Alan Turing ser conhecido como pai da computação, ele não criou o primeiro computador. Entre os primeiros computadores, um deles foi chamado Colossus projetado por Tommy Flowers durante a Segunda Guerra Mundial e também, praticamente na mesma época, o ENIAC foi projetado por J. Presper Eckert e John Mauchly.<br><br>Embora o Colossus tenha funcionado antes como um "herói de guerra" especializado, o ENIAC levou a fama por ser o primeiro programável de uso geral.<br><br>E aí, qual você consideraria como o primeiro computador?</p>
                 <p class="card-source">Fonte: <a href="https://www.tnmoc.org" target="_blank" rel="noopener noreferrer">The National Museum of Computing</a></p>
             </div>
             <div class="card-reactions">
-                <button class="btn-reaction" aria-label="Curtir">👍 0</button>
-                <button class="btn-reaction" aria-label="Amei">❤️ 0</button>
+                <button class="btn-reaction" aria-label="Curtir">👍 <span>0</span></button>
+                <button class="btn-reaction" aria-label="Amei">❤️ <span>0</span></button>
             </div>
         </article>
 
     </main>
 
-    <!-- Botão de alternar tema com ícone e acessibilidade -->
+    <!-- Botão de alternar tema -->
     <button id="toggle-theme" aria-label="Alternar tema claro e escuro">🌙</button>
 
     <script>
         const btnTheme = document.getElementById('toggle-theme');
 
-        // Carrega o tema salvo anteriormente
-        if (localStorage.getItem('tema') === 'escuro') {
-            document.body.classList.add('tema-escuro');
+        // Carrega o tema salvo no navegador
+        if (localStorage.getItem('tema') === 'claro') {
+            document.body.classList.add('tema-claro');
             btnTheme.textContent = '☀️';
         } else {
             btnTheme.textContent = '🌙';
         }
 
-        // Alterna entre tema claro e escuro
+        // Alterna entre tema escuro e claro
         btnTheme.addEventListener('click', () => {
-            document.body.classList.toggle('tema-escuro');
-            
-            const eTemaEscuro = document.body.classList.contains('tema-escuro');
-            btnTheme.textContent = eTemaEscuro ? '☀️' : '🌙';
-            localStorage.setItem('tema', eTemaEscuro ? 'escuro' : 'claro');
+            document.body.classList.toggle('tema-claro');
+            const eTemaClaro = document.body.classList.contains('tema-claro');
+            btnTheme.textContent = eTemaClaro ? '☀️' : '🌙';
+            localStorage.setItem('tema', eTemaClaro ? 'claro' : 'escuro');
+        });
+
+        // Lógica interativa dos botões de reação
+        document.querySelectorAll('.btn-reaction').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const countSpan = btn.querySelector('span');
+                let count = parseInt(countSpan.textContent, 10);
+                
+                if (btn.classList.contains('ativo')) {
+                    btn.classList.remove('ativo');
+                    countSpan.textContent = count - 1;
+                } else {
+                    btn.classList.add('ativo');
+                    countSpan.textContent = count + 1;
+                }
+            });
         });
     </script>
 
